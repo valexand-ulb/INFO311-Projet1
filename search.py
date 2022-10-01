@@ -16,7 +16,7 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
-
+import pacmanAgents
 import util
 
 class SearchProblem:
@@ -114,6 +114,10 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+    s= util.Stack()
+    s.push(pacmanAgents.Directions)
+    while (not s.isEmpty()) :
+        pass
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
