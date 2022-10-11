@@ -112,13 +112,20 @@ def depthFirstSearch(problem):
     print("Start:", problem.getStartState())
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    s=util.Stack()
-    s.push(problem.getStartState())
-    while not s.isEmpty():
-        act = s.pop()
-        print(act)
-        print()
+    Stack=util.Stack() # stack utilisé pour le DFS
+    Stack.push(problem.getStartState()) # ensemble des positions marquées
+    sMarked = set()
+    while not Stack.isEmpty():
+        tState = Stack.pop()
+        if problem.isGoalState(tState):
+            #traitement
+            pass
+        lnextActions = problem.expand(tState)
+        print(lnextActions)
+        for ttmpActions in lnextActions:
+            if ttmpActions[0] not in sMarked:
+                Stack.push(ttmpActions[0])
+        sMarked.add(tState)
 
 
 def breadthFirstSearch(problem):
