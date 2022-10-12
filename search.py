@@ -132,7 +132,6 @@ def depthFirstSearch(problem):
             return lPath
 
         lnextActions = problem.expand(tState)
-
         for ttmpActions in lnextActions:
             if ttmpActions[0] not in sMarked: # si non marqué, ajoute le dans Stack
                 Stack.push(ttmpActions[0])
@@ -141,9 +140,11 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
+    tState = problem.getStartState()
     Queue=util.Queue() # queue utilisé pour le BFS
-    Queue.push(problem.getStartState())
+    Queue.push(tState)
     sMarked = set() # ensemble des positions marquées
+    sMarked.add(tState)
     dOldPath= dict() # dictionnaire contenant le chemin parcourru
 
     while not Queue.isEmpty():
@@ -159,15 +160,15 @@ def breadthFirstSearch(problem):
                 tState = tPrevState[0]
             lPath.reverse()
             return lPath
-
+        
         lnextActions = problem.expand(tState)
-
         for ttmpActions in lnextActions:
-            if ttmpActions[0] not in sMarked: # si non marqué, ajoute le dans Queue
-                sMarked.add(tState)
+            if ttmpActions[0] not in sMarked: # si non marqué, ajoute le dans Stack
                 Queue.push(ttmpActions[0])
                 dOldPath[ttmpActions[0]] = (tState, ttmpActions[1])
-        
+        sMarked.add(tState)
+
+
 
 def nullHeuristic(state, problem=None):
     """
