@@ -116,10 +116,12 @@ def depthFirstSearch(problem):
     Stack.push(problem.getStartState())
     sMarked = set() # ensemble des positions marquées
     dOldPath= dict() # dictionnaire contenant le chemin parcourru
+
     while not Stack.isEmpty():
         tState = Stack.pop()
+
         if problem.isGoalState(tState): # si state est l'objectif
-            # traitement pour retrousser le chemin
+            # traitement pour retrousser le chemin inverse
             lPath = []
             tStart = problem.getStartState()
             while tState != tStart :
@@ -128,6 +130,7 @@ def depthFirstSearch(problem):
                 tState = tPrevState[0]
             lPath.reverse()
             return lPath
+
         lnextActions = problem.expand(tState)
 
         for ttmpActions in lnextActions:
@@ -138,8 +141,33 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    Queue=util.Queue() # queue utilisé pour le BFS
+    Queue.push(problem.getStartState())
+    sMarked = set() # ensemble des positions marquées
+    dOldPath= dict() # dictionnaire contenant le chemin parcourru
+
+    while not Queue.isEmpty():
+        tState = Queue.pop()
+
+        if problem.isGoalState(tState): # si state est l'objectif
+            # traitement pour retrousser le chemin inverse
+            lPath = []
+            tStart = problem.getStartState()
+            while tState != tStart :
+                tPrevState = dOldPath[tState]
+                lPath.append(tPrevState[1])
+                tState = tPrevState[0]
+            lPath.reverse()
+            return lPath
+
+        lnextActions = problem.expand(tState)
+
+        for ttmpActions in lnextActions:
+            if ttmpActions[0] not in sMarked: # si non marqué, ajoute le dans Queue
+                sMarked.add(tState)
+                Queue.push(ttmpActions[0])
+                dOldPath[ttmpActions[0]] = (tState, ttmpActions[1])
+        
 
 def nullHeuristic(state, problem=None):
     """
