@@ -113,20 +113,28 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     """
     Stack=util.Stack() # stack utilisé pour le DFS
-    Stack.push(problem.getStartState()) # ensemble des positions marquées
-    sMarked = set()
+    Stack.push(problem.getStartState())
+    sMarked = set() # ensemble des positions marquées
+    dOldPath= dict() # dictionnaire contenant le chemin parcourru
     while not Stack.isEmpty():
         tState = Stack.pop()
-        if problem.isGoalState(tState):
-            #traitement
-            pass
+        if problem.isGoalState(tState): # si state est l'objectif
+            # traitement pour retrousser le chemin
+            lPath = []
+            tStart = problem.getStartState()
+            while tState != tStart :
+                tPrevState = dOldPath[tState]
+                lPath.append(tPrevState[1])
+                tState = tPrevState[0]
+            lPath.reverse()
+            return lPath
         lnextActions = problem.expand(tState)
-        print(lnextActions)
-        for ttmpActions in lnextActions:
-            if ttmpActions[0] not in sMarked:
-                Stack.push(ttmpActions[0])
-        sMarked.add(tState)
 
+        for ttmpActions in lnextActions:
+            if ttmpActions[0] not in sMarked: # si non marqué, ajoute le dans Stack
+                Stack.push(ttmpActions[0])
+                dOldPath[ttmpActions[0]] = (tState, ttmpActions[1])
+        sMarked.add(tState)
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
