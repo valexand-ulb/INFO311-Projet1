@@ -98,6 +98,21 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
+def backtrackPath(problem, tfinishedState, dOldPath):
+    """
+    Function added to trace back the path from end to begining
+    :param dOldPath: Dict with old path
+    :return: path from begin to end
+    """
+    lPath = []
+    tStart = problem.getStartState()
+    while tfinishedState != tStart:
+        tPrevState = dOldPath[tfinishedState]
+        lPath.append(tPrevState[1])
+        tfinishedState = tPrevState[0]
+    lPath.reverse()
+    return lPath
+
 
 def depthFirstSearch(problem):
     """
@@ -122,14 +137,7 @@ def depthFirstSearch(problem):
 
         if problem.isGoalState(tState): # si state est l'objectif
             # traitement pour retrousser le chemin
-            lPath = []
-            tStart = problem.getStartState()
-            while tState != tStart :
-                tPrevState = dOldPath[tState]
-                lPath.append(tPrevState[1])
-                tState = tPrevState[0]
-            lPath.reverse()
-            return lPath
+            return backtrackPath(problem, tState, dOldPath)
 
         lnextActions = problem.expand(tState)
         for ttmpActions in lnextActions:
@@ -152,14 +160,7 @@ def breadthFirstSearch(problem):
 
         if problem.isGoalState(tState): # si state est l'objectif
             # traitement pour retrousser le chemin
-            lPath = []
-            tStart = problem.getStartState()
-            while tState != tStart:
-                tPrevState = dOldPath[tState]
-                lPath.append(tPrevState[1])
-                tState = tPrevState[0]
-            lPath.reverse()
-            return lPath
+            return backtrackPath(problem, tState, dOldPath)
         
         lnextActions = problem.expand(tState)
         for ttmpActions in lnextActions:
