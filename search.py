@@ -199,7 +199,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 itmpCost = problem.getCostOfActionSequence(lDirPath) + heuristic(tChild,problem)
                 Pqueue.push(tChild, itmpCost)
         sMarked.add(tState)
-    return
 
 
 
