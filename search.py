@@ -140,10 +140,10 @@ def depthFirstSearch(problem):
             return backtrackPath(problem, tState, dOldPath)
 
         lnextActions = problem.expand(tState)
-        for ttmpActions in lnextActions:
-            if ttmpActions[0] not in sMarked: # si non marqué, ajoute le dans Stack
-                Stack.push(ttmpActions[0])
-                dOldPath[ttmpActions[0]] = (tState, ttmpActions[1])
+        for tChild,strDir,iCost in lnextActions:
+            if tChild not in sMarked: # si non marqué, ajoute le dans Stack
+                Stack.push(tChild)
+                dOldPath[tChild] = (tState, strDir)
         sMarked.add(tState)
 
 def breadthFirstSearch(problem):
@@ -163,13 +163,11 @@ def breadthFirstSearch(problem):
             return backtrackPath(problem, tState, dOldPath)
         
         lnextActions = problem.expand(tState)
-        for ttmpActions in lnextActions:
-            if ttmpActions[0] not in sMarked: # si non marqué, ajoute le dans Stack
-                sMarked.add(ttmpActions[0])
-                Queue.push(ttmpActions[0])
-                dOldPath[ttmpActions[0]] = (tState, ttmpActions[1])
-
-
+        for tChild, strDir, iCost in lnextActions:
+            if tChild not in sMarked: # si non marqué, ajoute le dans Stack
+                sMarked.add(tChild)
+                Queue.push(tChild)
+                dOldPath[tChild] = (tState,strDir)
 
 
 def nullHeuristic(state, problem=None):
@@ -182,7 +180,27 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    tState = problem.getStartState()
+    Pqueue = util.PriorityQueue()
+    Pqueue.push(tState, 0)
+
+    sMarked = set()  # ensemble des positions marquées
+    sMarked.add(tState)
+    dOldPath = dict()  # dictionnaire contenant le chemin parcourru
+    tState= Pqueue.pop()
+
+
+    while not problem.isGoalState(tState):
+        if tState not in sMarked:
+            sMarked.add(tState)
+            lnextActions = problem.expand(tState)
+            for tChild, strDir, iCost in lnextActions:
+                iNewCost = iCost + problem.getCostOfActionSequence() + heuristic(tChild, problem)
+                if tChild not in sMarked:
+                    Pqueue.push(tChild, iNewCost)
+            tState = Pqueue.pop()
+    return
+
 
 
 # Abbreviations
