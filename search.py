@@ -16,6 +16,7 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
+import searchAgents
 import util
 
 class SearchProblem:
@@ -139,8 +140,7 @@ def depthFirstSearch(problem):
             # traitement pour retrousser le chemin
             return backtrackPath(problem, tState, dOldPath)
 
-        lnextActions = problem.expand(tState)
-        for tChild,strDir,iCost in lnextActions:
+        for tChild,strDir,iCost in problem.expand(tState):
             if tChild not in sMarked: # si non marqué, ajoute le dans Stack
                 Stack.push(tChild)
                 dOldPath[tChild] = (tState, strDir)
@@ -161,9 +161,8 @@ def breadthFirstSearch(problem):
         if problem.isGoalState(tState): # si state est l'objectif
             # traitement pour retrousser le chemin
             return backtrackPath(problem, tState, dOldPath)
-        
-        lnextActions = problem.expand(tState)
-        for tChild, strDir, iCost in lnextActions:
+
+        for tChild, strDir, iCost in problem.expand(tState):
             if tChild not in sMarked: # si non marqué, ajoute le dans Stack
                 sMarked.add(tChild)
                 Queue.push(tChild)
@@ -187,18 +186,19 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     sMarked = set()  # ensemble des positions marquées
     sMarked.add(tState)
     dOldPath = dict()  # dictionnaire contenant le chemin parcourru
-    tState= Pqueue.pop()
+    lDirPath = []
 
-
-    while not problem.isGoalState(tState):
-        if tState not in sMarked:
-            sMarked.add(tState)
-            lnextActions = problem.expand(tState)
-            for tChild, strDir, iCost in lnextActions:
-                iNewCost = iCost + problem.getCostOfActionSequence() + heuristic(tChild, problem)
-                if tChild not in sMarked:
-                    Pqueue.push(tChild, iNewCost)
-            tState = Pqueue.pop()
+    while not Pqueue.isEmpty():
+        tState=Pqueue.pop()
+        if problem.isGoalState(tState):
+            return backtrackPath(problem,tState,dOldPath)
+        for tChild, strDir, iCost in problem.expand(tState):
+            if tChild not in sMarked:
+                dOldPath[tChild] = (tState, strDir)
+                lDirPath.append(strDir)
+                itmpCost = problem.getCostOfActionSequence(lDirPath) + heuristic(tChild,problem)
+                Pqueue.push(tChild, itmpCost)
+        sMarked.add(tState)
     return
 
 
