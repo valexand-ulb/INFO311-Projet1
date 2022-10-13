@@ -121,7 +121,7 @@ def depthFirstSearch(problem):
         tState = Stack.pop()
 
         if problem.isGoalState(tState): # si state est l'objectif
-            # traitement pour retrousser le chemin inverse
+            # traitement pour retrousser le chemin
             lPath = []
             tStart = problem.getStartState()
             while tState != tStart :
@@ -151,10 +151,10 @@ def breadthFirstSearch(problem):
         tState = Queue.pop()
 
         if problem.isGoalState(tState): # si state est l'objectif
-            # traitement pour retrousser le chemin inverse
+            # traitement pour retrousser le chemin
             lPath = []
             tStart = problem.getStartState()
-            while tState != tStart :
+            while tState != tStart:
                 tPrevState = dOldPath[tState]
                 lPath.append(tPrevState[1])
                 tState = tPrevState[0]
@@ -164,9 +164,10 @@ def breadthFirstSearch(problem):
         lnextActions = problem.expand(tState)
         for ttmpActions in lnextActions:
             if ttmpActions[0] not in sMarked: # si non marqué, ajoute le dans Stack
+                sMarked.add(ttmpActions[0])
                 Queue.push(ttmpActions[0])
                 dOldPath[ttmpActions[0]] = (tState, ttmpActions[1])
-        sMarked.add(tState)
+
 
 
 
