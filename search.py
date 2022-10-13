@@ -186,7 +186,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     sMarked = set()  # ensemble des positions marquées
     sMarked.add(tState)
     dOldPath = dict()  # dictionnaire contenant le chemin parcourru
-    lDirPath = []
 
     while not Pqueue.isEmpty():
         tState=Pqueue.pop()
@@ -194,10 +193,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             return backtrackPath(problem,tState,dOldPath)
         for tChild, strDir, iCost in problem.expand(tState):
             if tChild not in sMarked:
-                dOldPath[tChild] = (tState, strDir)
-                lDirPath.append(strDir)
-                itmpCost = problem.getCostOfActionSequence(lDirPath) + heuristic(tChild,problem)
-                Pqueue.push(tChild, itmpCost)
+                dOldPath[tChild] = (tState, strDir, iCost)
+                Pqueue.update(tChild, iCost + heuristic(tChild,problem))
         sMarked.add(tState)
 
 
