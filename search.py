@@ -99,20 +99,20 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-def backtrackPath(problem, tfinishedState, dOldPath):
+def backtrackPath(problem, t_finishedState, d_OldPath):
     """
     Function added to trace back the path from end to begining
     :param dOldPath: Dict with old path
     :return: path from begin to end
     """
-    lPath = []
-    tStart = problem.getStartState()
-    while tfinishedState != tStart:
-        tPrevState = dOldPath[tfinishedState]
-        lPath.append(tPrevState[1])
-        tfinishedState = tPrevState[0]
-    lPath.reverse()
-    return lPath
+    l_Path = []
+    t_Start = problem.getStartState()
+    while t_finishedState != t_Start:
+        t_PrevState = d_OldPath[t_finishedState]
+        l_Path.append(t_PrevState[1])
+        t_finishedState = t_PrevState[0]
+    l_Path.reverse()
+    return l_Path
 
 
 def depthFirstSearch(problem):
