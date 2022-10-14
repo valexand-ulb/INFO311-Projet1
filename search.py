@@ -192,8 +192,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         if problem.isGoalState(tState):
             return backtrackPath(problem,tState,dOldPath)
         for tChild, strDir, iCost in problem.expand(tState):
-            if tChild not in sMarked:
-                dOldPath[tChild] = (tState, strDir, iCost)
+            if tChild not in sMarked and tChild:
+                dOldPath[tChild] = (tState, strDir)
                 Pqueue.update(tChild, iCost + heuristic(tChild,problem))
         sMarked.add(tState)
 
