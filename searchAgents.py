@@ -344,7 +344,7 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that child
         """
 
-        """ code repris de PositionSearchProblem.expand() """
+        """ code basé sur PositionSearchProblem.expand() """
 
         children = []
         t_Position, t_Corners = state
@@ -354,6 +354,8 @@ class CornersProblem(search.SearchProblem):
             # You should call getActions, getActionCost, and getNextState.
             "*** YOUR CODE HERE ***"
             t_nextState = self.getNextState(state, action)
+            if t_nextState in self.corners and t_nextState not in t_Corners:
+                t_Corners += (t_nextState,)
             i_Cost = self.getActionCost(state, action, t_nextState)
             children.append(((t_nextState, t_Corners), action, i_Cost))
 
@@ -384,11 +386,8 @@ class CornersProblem(search.SearchProblem):
         nextx, nexty = int(x + dx), int(y + dy)
         "*** YOUR CODE HERE ***"
 
-        t_Corners = state[1] # tuple des coins visités
         if not self.walls[nextx][nexty]: # Si le prochain mouvement n'est pas dans un mur
-            if (nextx, nexty) in self.corners and (nextx, nexty) not in t_Corners: # si prochain état est un coin non visité
-                t_Corners += ((nextx, nexty),) # retourne le prochain coin
-        return (nextx, nexty)
+            return nextx, nexty
 
 
     def getCostOfActionSequence(self, actions):
