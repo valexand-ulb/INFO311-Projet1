@@ -317,7 +317,7 @@ class CornersProblem(search.SearchProblem):
         "*** Selon le hint n°1 sur berkeley.edu : \"[...] the starting Pacman position and the location of the four " \
         "corners\" *** "
 
-        # l'utilisation d'un tuple se justifie par sa capacité a être hashable
+        # l'utilisation d'un tuple se justifie par sa capacité à être hashable
         return self.startingPosition, () # retourne la position de départ et un tuple des quatres coins (vide de base)
 
     def isGoalState(self, state):
@@ -353,11 +353,14 @@ class CornersProblem(search.SearchProblem):
             # Add a child state to the child list if the action is legal
             # You should call getActions, getActionCost, and getNextState.
             "*** YOUR CODE HERE ***"
-            t_nextPos = self.getNextState(state, action)
-            t_ChildCorners = t_Corners
-            if t_nextPos in self.corners and t_nextPos not in t_ChildCorners:
-                t_ChildCorners += (t_nextPos,)
-            i_Cost = self.getActionCost(state, action, t_nextPos)
+
+            t_nextPos = self.getNextState(state, action) # position suivante à partir de l'état et l'action
+            t_ChildCorners = t_Corners # copie des coins déjà visités
+            i_Cost = self.getActionCost(state, action, t_nextPos) # cout de l'action
+
+            if t_nextPos in self.corners and t_nextPos not in t_ChildCorners: # si la position suivante est un coin non marqué
+                t_ChildCorners += (t_nextPos,) # ajoute le coin au coins marqués
+
             children.append(((t_nextPos, t_ChildCorners), action, i_Cost))
 
         self._expanded += 1 # DO NOT CHANGE
@@ -386,6 +389,7 @@ class CornersProblem(search.SearchProblem):
         dx, dy = Actions.directionToVector(action)
         nextx, nexty = int(x + dx), int(y + dy)
         "*** YOUR CODE HERE ***"
+        # Pas besoin de plus que retourner la coordonnée suivante ???
         return nextx, nexty
 
 
