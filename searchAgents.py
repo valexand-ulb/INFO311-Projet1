@@ -314,15 +314,24 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        "*** Selon le hint n°1 sur berkeley.edu : \"[...] the starting Pacman position and the location of the four " \
+        "corners\" *** "
+
+        # l'utilisation d'un tuple se justifie par sa capacité a être hashable
+        return self.startingPosition, () # retourne la position de départ et un tuple des quatres coins
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        t_Position, t_Corners = state
+
+        if t_Position in self.corners:  # si la position est effectivement un coin ...
+            if t_Position not in t_Corners: # ...et que le coin n'a pas encore été visité
+                t_Corners += (t_Position,)  # ajoute la position au tuple
+            return len(t_Corners) == 4  # vrai si les quatres coins ont été visités
+        return False
 
     def expand(self, state):
         """
@@ -335,11 +344,23 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that child
         """
 
+        """ code repris de PositionSearchProblem.expand()
         children = []
+        for action in self.getActions(state):
+            nextState = self.getNextState(state, action)
+            cost = self.getActionCost(state, action, nextState)
+            children.append((nextState, action, cost))
+        """
+
+        children = []
+        t_Position, t_Corners = state
         for action in self.getActions(state):
             # Add a child state to the child list if the action is legal
             # You should call getActions, getActionCost, and getNextState.
             "*** YOUR CODE HERE ***"
+            t_nextState = self.getNextState(state, action)
+            i_Cost = self.getActionCost(state, action, t_nextState)
+            children.append(((t_nextState, t_Corners), action, i_Cost))
 
         self._expanded += 1 # DO NOT CHANGE
         return children
@@ -367,7 +388,13 @@ class CornersProblem(search.SearchProblem):
         dx, dy = Actions.directionToVector(action)
         nextx, nexty = int(x + dx), int(y + dy)
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        t_Corners = state[1] # tuple des coins visités
+        if not self.walls[nextx][nexty]: # Si le prochain mouvement n'est pas dans un mur
+            if (nextx, nexty) in self.corners and (nextx, nexty) not in t_Corners: # si prochain état est un coin non visité
+                t_Corners += ((nextx, nexty),) # retourne le prochain coin
+        return (nextx, nexty)
+
 
     def getCostOfActionSequence(self, actions):
         """

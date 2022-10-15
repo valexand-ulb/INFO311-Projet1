@@ -190,7 +190,7 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
+    "*** Selon le pseudoCode présent sur wikipedia : https://fr.wikipedia.org/wiki/Algorithme_A* ***"
     t_StartState = problem.getStartState() # état de départ
 
     # init. de la priority queue
@@ -199,7 +199,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
     # init de l'ensemble des positions marquées
     s_Marked = set()
-    #s_Marked.add(t_StartState)
 
     # init du dictionnaire du chemin de retour
     d_OldPath = dict()
