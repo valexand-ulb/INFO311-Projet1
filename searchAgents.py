@@ -344,16 +344,11 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that child
         """
 
-        """ code repris de PositionSearchProblem.expand()
-        children = []
-        for action in self.getActions(state):
-            nextState = self.getNextState(state, action)
-            cost = self.getActionCost(state, action, nextState)
-            children.append((nextState, action, cost))
-        """
+        """ code repris de PositionSearchProblem.expand() """
 
         children = []
         t_Position, t_Corners = state
+
         for action in self.getActions(state):
             # Add a child state to the child list if the action is legal
             # You should call getActions, getActionCost, and getNextState.
