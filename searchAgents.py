@@ -318,7 +318,7 @@ class CornersProblem(search.SearchProblem):
         "corners\" *** "
 
         # l'utilisation d'un tuple se justifie par sa capacité a être hashable
-        return self.startingPosition, () # retourne la position de départ et un tuple des quatres coins
+        return self.startingPosition, () # retourne la position de départ et un tuple des quatres coins (vide de base)
 
     def isGoalState(self, state):
         """
@@ -353,11 +353,12 @@ class CornersProblem(search.SearchProblem):
             # Add a child state to the child list if the action is legal
             # You should call getActions, getActionCost, and getNextState.
             "*** YOUR CODE HERE ***"
-            t_nextState = self.getNextState(state, action)
-            if t_nextState in self.corners and t_nextState not in t_Corners:
-                t_Corners += (t_nextState,)
-            i_Cost = self.getActionCost(state, action, t_nextState)
-            children.append(((t_nextState, t_Corners), action, i_Cost))
+            t_nextPos = self.getNextState(state, action)
+            t_ChildCorners = t_Corners
+            if t_nextPos in self.corners and t_nextPos not in t_ChildCorners:
+                t_ChildCorners += (t_nextPos,)
+            i_Cost = self.getActionCost(state, action, t_nextPos)
+            children.append(((t_nextPos, t_ChildCorners), action, i_Cost))
 
         self._expanded += 1 # DO NOT CHANGE
         return children
@@ -385,9 +386,7 @@ class CornersProblem(search.SearchProblem):
         dx, dy = Actions.directionToVector(action)
         nextx, nexty = int(x + dx), int(y + dy)
         "*** YOUR CODE HERE ***"
-
-        if not self.walls[nextx][nexty]: # Si le prochain mouvement n'est pas dans un mur
-            return nextx, nexty
+        return nextx, nexty
 
 
     def getCostOfActionSequence(self, actions):
