@@ -130,55 +130,56 @@ def depthFirstSearch(problem):
     """
 
     # init. du stack
-    Stack=util.Stack() # stack utilisé pour le DFS
+    Stack=util.Stack()  # stack utilisé pour le DFS
     Stack.push(problem.getStartState())
 
     # init. de l'ensemble des position marquées
     s_Marked = set()
 
     # init du dictionnaire du chemin parcourru
-    d_OldPath= dict() # dictionnaire contenant le chemin parcourru
+    d_OldPath= dict()   # dictionnaire contenant le chemin parcourru
 
     while not Stack.isEmpty():
         t_State = Stack.pop()
 
-        if problem.isGoalState(t_State): # si state est l'objectif
+        if problem.isGoalState(t_State):    # si state est l'objectif
             # traitement pour retrousser le chemin
             return backtrackPath(problem, t_State, d_OldPath)
 
         for t_Child,str_Dir,i_Cost in problem.expand(t_State):
-            if t_Child not in s_Marked: # si non marqué, ajoute le dans Stack
+            if t_Child not in s_Marked:     # si non marqué, ajoute le dans Stack
                 Stack.push(t_Child)
                 d_OldPath[t_Child] = (t_State, str_Dir)
         s_Marked.add(t_State)
 
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    tState = problem.getStartState() # état initial
+    tState = problem.getStartState()    # état initial
 
     # init. de la Queue
-    Queue=util.Queue() # queue utilisé pour le BFS
+    Queue=util.Queue()  # queue utilisé pour le BFS
     Queue.push(tState)
 
     # init. de l'ensemble des position marquées
-    s_Marked = set() # ensemble des positions marquées
+    s_Marked = set()    # ensemble des positions marquées
     s_Marked.add(tState)
 
     # init du dictionnaire du chemin parcourru
-    d_OldPath= dict() # dictionnaire contenant le chemin parcourru
+    d_OldPath= dict()   # dictionnaire contenant le chemin parcourru
 
     while not Queue.isEmpty():
         t_State = Queue.pop()
 
-        if problem.isGoalState(t_State): # si state est l'objectif
+        if problem.isGoalState(t_State):    # si state est l'objectif
             # traitement pour retrousser le chemin
             return backtrackPath(problem, t_State, d_OldPath)
 
         for t_Child, str_Dir, i_Cost in problem.expand(t_State):
-            if t_Child not in s_Marked: # si non marqué, ajoute la Queue
+            if t_Child not in s_Marked:     # si non marqué, ajoute la Queue
                 s_Marked.add(t_Child)
                 Queue.push(t_Child)
-                d_OldPath[t_Child] = (t_State,str_Dir)
+                d_OldPath[t_Child] = (t_State, str_Dir)
 
 
 def nullHeuristic(state, problem=None):
@@ -188,10 +189,11 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** Selon le pseudoCode présent sur wikipedia : https://fr.wikipedia.org/wiki/Algorithme_A* ***"
-    t_StartState = problem.getStartState() # état de départ
+    t_StartState = problem.getStartState()  # état de départ
 
     # init. de la priority queue
     Pqueue = util.PriorityQueue()
@@ -209,15 +211,15 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
         t_State=Pqueue.pop()
 
-        if problem.isGoalState(t_State): # si goal trouvé
-            return backtrackPath(problem,t_State,d_OldPath)
+        if problem.isGoalState(t_State):    # si goal trouvé
+            return backtrackPath(problem, t_State, d_OldPath)
 
         for t_ChildState, str_Dir, i_Cost in problem.expand(t_State):
+            # si enfant pas marqus et qu'il existe pas un enfant avec un cout moindre
             if t_ChildState not in s_Marked and (t_ChildState not in d_OldPath or (i_Cost + d_OldPath[t_State][2] < d_OldPath[t_ChildState][2])):
                 d_OldPath[t_ChildState] = (t_State, str_Dir,i_Cost + d_OldPath[t_State][2])
                 Pqueue.update(t_ChildState, d_OldPath[t_ChildState][2] + heuristic(t_ChildState,problem))
         s_Marked.add(t_State)
-
 
 
 # Abbreviations

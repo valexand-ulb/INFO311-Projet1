@@ -297,6 +297,7 @@ class CornersProblem(search.SearchProblem):
         """
         Stores the walls, pacman's starting position and corners.
         """
+
         self.walls = startingGameState.getWalls()
         self.startingPosition = startingGameState.getPacmanPosition()
         top, right = self.walls.height-2, self.walls.width-2
@@ -308,6 +309,7 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        self.startingGameState = startingGameState
 
     def getStartState(self):
         """
@@ -420,17 +422,35 @@ def cornersHeuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    corners = problem.corners   # These are the corner coordinates
+    walls = problem.walls   # These are the walls of the maze, as a Grid (game.py)
 
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    t_Position, t_Corners = state
+    l_allDist = []
+
+    if problem.isGoalState(state): # si solution triviale
+        return 0
+
+    for t_Corner in problem.corners:    # pour les coins dans les coins disponnibles
+        if t_Corner not in t_Corners:   # si le coin n'as pas encore été visité
+            # évalue la distance euclidienne / manhattan
+            # (pos_x, pos_y), (cor_x, cor_y) = t_Position, t_Corner
+            # i_evalDist = ((pos_x - cor_x) ** 2 + (pos_y - cor_y) ** 2) ** 0.5
+            # i_evalDist = util.manhattanDistance(t_Position, t_Corner) # distance de manhattant + adaptée que euclidienne
+
+            # Après discussion entre étudiant, la fonction suivante utilisant un BFS rapporte plus de point...
+            i_evalDist = mazeDistance(t_Position, t_Corner, problem.startingGameState)
+            l_allDist.append(i_evalDist)
+
+    return max(l_allDist)
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
     def __init__(self):
         self.searchFunction = lambda prob: search.aStarSearch(prob, cornersHeuristic)
         self.searchType = CornersProblem
+
 
 class FoodSearchProblem:
     """
@@ -538,9 +558,14 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    position, foodGrid = state  # ici la nourriture est mise sous forme matricielle
+
+    l_allFoods = foodGrid.asList()  # transforme la matrice en liste
+    s_Dist = set()  # ensemble des distances
+    s_Dist.add(0)   # initialise le set avec une valeur nulle
+    for t_pos in l_allFoods:
+        s_Dist.add(mazeDistance(position, t_pos, problem.startingGameState))
+    return max(s_Dist)
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -570,8 +595,9 @@ class ClosestDotSearchAgent(SearchAgent):
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # problème équivalent au A* ???
+        from search import aStarSearch
+        return aStarSearch(problem)
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -606,8 +632,8 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         """
         x,y = state
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Goal : Est se qu'il y a une nourriture à la position ?
+        return (x, y) in self.food.asList()
 
 def mazeDistance(point1, point2, gameState):
     """
